@@ -83,29 +83,34 @@
             /* emas */
         }
 
-        /* Dark mode netting box override to white background with dark text and keep box shadow */
+        /* Dark mode netting box to match others */
         .dark-mode .netting {
-            background-color: white !important;
-            color: #0b1423 !important;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3) !important;
+            background-color: #1e293b !important;
+            color: #f3f4f6 !important;
+            box-shadow: 0 3px 12px rgb(255 215 0 / 0.3) !important;
         }
 
         .dark-mode .netting h2 {
-            color: #0b1423 !important;
+            color: #fbbf24 !important;
+            /* gold title */
         }
 
         .dark-mode .netting-total {
-            color: #0b1423 !important;
+            color: #fbbf24 !important;
+        }
+
+        .dark-mode .names {
+            color: #ffffff !important;
         }
 
         .dark-mode .netting-row {
-            color: #0b1423 !important;
-            border-color: #ccc !important;
+            color: #f3f4f6 !important;
+            border-color: #475569 !important;
         }
 
         .dark-mode .sort-icon {
-            color: #0b1423 !important;
-            fill: #0b1423 !important;
+            color: #fbbf24 !important;
+            fill: #fbbf24 !important;
         }
 
         /* Transitions untuk perubahan warna */
@@ -438,6 +443,10 @@
             border-color: #475569;
         }
 
+        .dark-mode .history h2 {
+            color: #fbbf24;
+        }
+
         .history-item:last-child {
             border-bottom: none;
         }
@@ -482,7 +491,7 @@
             background-color: #dc2626;
         }
 
-        /* Box bawah netting full width */
+        /* Box netting */
         .netting {
             background-color: white;
             border-radius: 0.5rem;
@@ -509,6 +518,7 @@
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
+            position: relative;
         }
 
         .sort-icon {
@@ -518,9 +528,17 @@
             fill: currentColor;
             transition: transform 0.3s ease;
             position: absolute;
-            top: 1.3rem;
             right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
             user-select: none;
+            color: #2563eb;
+            /* default blue */
+        }
+
+        .dark-mode .sort-icon {
+            color: #bfa742;
+            /* gold for dark mode */
         }
 
         .netting-list {
@@ -841,6 +859,7 @@
         renderNetting(nettingData);
 
         // Box Hutang Input and Tabs Functionality
+
         const amountInput = document.getElementById('amountInput');
         const autoAmount = document.getElementById('autoAmount');
         const namaSelect1 = document.getElementById('namaSelect1');
@@ -889,7 +908,7 @@
             autoAmount.value = '';
         }
 
-        // Mode toggle button and icon swap
+        // Mode toggle functionality
         const toggleModeBtn = document.getElementById('toggleMode');
         const body = document.body;
 

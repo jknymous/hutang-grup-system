@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Buku Besar Agus Yanto</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body class="light-mode">
+    <header>
+        <img src="logo.png" alt="Logo" />
+        <h1>Buku Besar Agus Yanto</h1>
+        <div class="header-buttons">
+            <button id="toggleMode" aria-label="Toggle Dark/Light Mode" title="Toggle Mode" type="button">
+                <svg id="modeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"
+                    focusable="false">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+            <button id="logout" type="button">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="top-boxes">
+            <section class="box hutang" aria-labelledby="hutangLabel" role="region">
+                <div class="tabs-container">
+                    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="hutangPanel"
+                        id="hutangTab">Hutang</button>
+                    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="bayarPanel"
+                        id="bayarTab">Bayar</button>
+                </div>
+                <form id="formHutang" aria-labelledby="hutangTab" class="form-container" autocomplete="off"
+                    onsubmit="return onSubmitForm(event)">
+                    <div class="form-row">
+                        <select aria-label="Pilih nama penghutang/penerima" id="namaSelect1" required>
+                            <option value="" disabled selected>Pilih Nama</option>
+                            <option value="Andi">Andi</option>
+                            <option value="Budi">Budi</option>
+                            <option value="Citra">Citra</option>
+                        </select>
+                        <input type="text" id="amountInput" aria-label="Masukkan jumlah" placeholder="Rp 10.000"
+                            required inputmode="numeric" />
+                    </div>
+                    <div class="arrow-center" aria-hidden="true">⇅</div>
+                    <div class="form-row">
+                        <select aria-label="Pilih nama penerima/penghutang" id="namaSelect2" required>
+                            <option value="" disabled selected>Pilih Nama</option>
+                            <option value="Andi">Andi</option>
+                            <option value="Budi">Budi</option>
+                            <option value="Citra">Citra</option>
+                        </select>
+                        <input type="text" id="autoAmount" aria-label="Jumlah yang di atas" readonly
+                            placeholder="Rp 0" />
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitBtn">Submit Hutang</button>
+                </form>
+            </section>
+            <section class="box history" aria-labelledby="historyLabel" role="region">
+                <h2 id="historyLabel" class="font-bold text-lg mb-3 select-none">History Transaksi</h2>
+                <div id="historyList" role="list" class="overflow-y-auto max-h-[460px] pr-2">
+                    <div class="history-group" role="group" aria-labelledby="date1-label">
+                        <div class="history-date" id="date1-label">01/01/2023</div>
+                        <div class="history-item" role="listitem">
+                            <div class="history-desc">Transaksi 1</div>
+                            <div class="history-buttons">
+                                <button class="btn-edit" type="button" aria-label="Edit transaksi 1">Edit</button>
+                                <button class="btn-delete" type="button" aria-label="Hapus transaksi 1">Hapus</button>
+                            </div>
+                        </div>
+                        <div class="history-item" role="listitem">
+                            <div class="history-desc">Transaksi 2</div>
+                            <div class="history-buttons">
+                                <button class="btn-edit" type="button" aria-label="Edit transaksi 2">Edit</button>
+                                <button class="btn-delete" type="button" aria-label="Hapus transaksi 2">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="history-group" role="group" aria-labelledby="date2-label">
+                        <div class="history-date" id="date2-label">02/01/2023</div>
+                        <div class="history-item" role="listitem">
+                            <div class="history-desc">Bayar Cicilan</div>
+                            <div class="history-buttons">
+                                <button class="btn-edit" type="button" aria-label="Edit transaksi 3">Edit</button>
+                                <button class="btn-delete" type="button" aria-label="Hapus transaksi 3">Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="netting" aria-labelledby="nettingLabel" role="region">
+            <h2 id="nettingLabel">
+                Hasil Netting
+                <svg id="sortNetting" class="sort-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                    aria-label="Sort Netting Data" role="button" tabindex="0" title="Sort Netting Data"></svg>
+            </h2>
+            <div id="nettingList" class="netting-list"></div>
+            <div id="nettingTotal" class="netting-total">Total Hutang: Rp 0</div>
+        </section>
+    </main>
+
+    <script>
+        function formatRupiah(number) {
+            return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        const nettingData = [
+            { penghutang: "Andi", yangDihutang: "Budi", nominal: 1000000 },
+            { penghutang: "Citra", yangDihutang: "Andi", nominal: 500000 },
+            { penghutang: "Citra", yangDihutang: "Budi", nominal: 750000 },
+        ];
+
+        const nettingList = document.getElementById("nettingList");
+        const nettingTotal = document.getElementById("nettingTotal");
+        const sortNettingBtn = document.getElementById("sortNetting");
+
+        let sortField = "penghutang"; // default sort by penghutang
+        let sortDirection = "asc";
+
+        function renderNetting(data) {
+            nettingList.innerHTML = "";
+            let total = 0;
+            data.forEach(item => {
+                total += item.nominal;
+                const row = document.createElement("div");
+                row.className = "netting-row";
+                row.innerHTML = `
+          <span class="names">${item.penghutang} hutang ${item.yangDihutang}</span>
+          <span class="nominal">${formatRupiah(item.nominal)}</span>
+        `;
+                nettingList.appendChild(row);
+            });
+            nettingTotal.textContent = `Total Hutang: ${formatRupiah(total)}`;
+        }
+
+        function sortNettingData(field) {
+            if (sortField === field) {
+                sortDirection = sortDirection === "asc" ? "desc" : "asc";
+            } else {
+                sortField = field;
+                sortDirection = "asc";
+            }
+            const sorted = [...nettingData].sort((a, b) => {
+                let valA = a[field].toLowerCase();
+                let valB = b[field].toLowerCase();
+                if (valA < valB) return sortDirection === "asc" ? -1 : 1;
+                if (valA > valB) return sortDirection === "asc" ? 1 : -1;
+                return 0;
+            });
+            renderNetting(sorted);
+            updateSortIcon();
+        }
+
+        function updateSortIcon() {
+            if (sortField === "penghutang") {
+                sortNettingBtn.style.transform = sortDirection === "asc" ? "rotate(0deg)" : "rotate(180deg)";
+            } else {
+                sortNettingBtn.style.transform = "rotate(0deg)";
+            }
+        }
+
+        sortNettingBtn.innerHTML = '<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+        sortNettingBtn.style.cursor = 'pointer';
+
+        sortNettingBtn.addEventListener("click", () => {
+            sortNettingData("penghutang");
+        });
+
+        renderNetting(nettingData);
+
+        // Box Hutang Input and Tabs Functionality
+
+        const amountInput = document.getElementById('amountInput');
+        const autoAmount = document.getElementById('autoAmount');
+        const namaSelect1 = document.getElementById('namaSelect1');
+        const namaSelect2 = document.getElementById('namaSelect2');
+        const submitBtn = document.getElementById('submitBtn');
+        const hutangTab = document.getElementById('hutangTab');
+        const bayarTab = document.getElementById('bayarTab');
+
+        amountInput.addEventListener('input', function (e) {
+            let input = e.target.value.replace(/[^0-9,]/g, '');
+            e.target.value = formatRupiah(input);
+            autoAmount.value = e.target.value;
+        });
+
+        hutangTab.addEventListener('click', () => {
+            hutangTab.classList.add('active');
+            hutangTab.setAttribute('aria-selected', 'true');
+            bayarTab.classList.remove('active');
+            bayarTab.setAttribute('aria-selected', 'false');
+            submitBtn.textContent = "Submit Hutang";
+        });
+
+        bayarTab.addEventListener('click', () => {
+            bayarTab.classList.add('active');
+            bayarTab.setAttribute('aria-selected', 'true');
+            hutangTab.classList.remove('active');
+            hutangTab.setAttribute('aria-selected', 'false');
+            submitBtn.textContent = "Submit Bayar";
+        });
+
+        function onSubmitForm(event) {
+            event.preventDefault();
+            const namaDari = namaSelect1.value;
+            const namaKe = namaSelect2.value;
+            const amountRaw = amountInput.value.replace(/[^0-9]/g, '');
+            if (!namaDari || !namaKe || !amountRaw) {
+                alert('Mohon lengkapi semua isian.');
+                return;
+            }
+            const amount = parseInt(amountRaw, 10);
+            const activeTab = hutangTab.classList.contains('active') ? 'Hutang' : 'Bayar';
+            alert(`Submit ${activeTab}:\nDari: ${namaDari}\nKe: ${namaKe}\nJumlah: Rp ${amount.toLocaleString('id-ID')}`);
+            namaSelect1.value = '';
+            namaSelect2.value = '';
+            amountInput.value = '';
+            autoAmount.value = '';
+        }
+
+        // Mode toggle functionality
+        const toggleModeBtn = document.getElementById('toggleMode');
+        const body = document.body;
+
+        function setIconDark() {
+            toggleModeBtn.innerHTML = '<svg id="modeIcon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"/></svg>';
+        }
+
+        function setIconLight() {
+            toggleModeBtn.innerHTML = '<svg id="modeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+        }
+
+        function toggleMode() {
+            if (body.classList.contains('light-mode')) {
+                body.classList.replace('light-mode', 'dark-mode');
+                setIconDark();
+            } else {
+                body.classList.replace('dark-mode', 'light-mode');
+                setIconLight();
+            }
+        }
+
+        toggleModeBtn.addEventListener('click', toggleMode);
+    </script>
+</body>
+
+</html>

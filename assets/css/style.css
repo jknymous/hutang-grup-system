@@ -142,7 +142,7 @@ header h1 {
 }
 
 /* Hide title if screen width <= 700px */
-@media (max-width:700px) {
+@media (max-width: 700px) {
     header h1 {
         display: none;
     }
@@ -225,6 +225,13 @@ main {
     overflow: hidden;
     background-color: inherit;
     margin-bottom: 1rem;
+
+    /* Agar tabs tidak ikut ter-scroll keluar di mobile */
+    position: -webkit-sticky;
+    /* untuk Safari */
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 /* Tab buttons */
@@ -240,6 +247,7 @@ main {
     transition: background-color 0.3s, color 0.3s, border-bottom-color 0.3s;
     border-bottom: 3px solid transparent;
     color: inherit;
+    white-space: nowrap;
 }
 
 /* Active tab light mode */
@@ -637,27 +645,149 @@ main {
     }
 }
 
+/* Responsive adjustments for ≤ 380px */
 @media (max-width: 380px) {
     body {
-        font-size: 12px;
+        font-size: 10px;
+        /* Smaller font size for better fit */
     }
 
     svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        /* Adjust icon size */
+        height: 16px;
     }
 
     header h1 {
         font-size: 1rem;
+        /* Adjust header font size */
     }
 
     button {
         padding: 0.25rem;
+        /* Adjust button padding */
+        font-size: 0.875rem;
+        /* Smaller button font size */
+    }
+
+    /* Pastikan ketiga box (hutang, history, netting) full-width di 380px */
+    .hutang,
+    .history,
+    .netting {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Khusus .hutang: hilangkan overflow di sini, dan pindahkan scroll ke .form-container */
+    .hutang {
+        max-height: 300px;
+        overflow: hidden;
+    }
+
+    .hutang .form-container {
+        max-height: 260px;
+        /* Sesuaikan agar sisa ruang untuk tabs */
+        overflow-y: auto;
+    }
+
+    /* Pastikan .tabs-container selalu terlihat (sticky) */
+    .tabs-container {
+        flex-direction: row;
+        gap: 0;
+        margin-bottom: 0rem;
+        /* position dan top sudah didefinisikan di aturan umum */
+    }
+
+    /* Buat kedua tab berukuran sama dan muat 100% lebar */
+    .tab-btn {
+        flex: 1 1 50%;
+        margin-right: 0.25rem;
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Hilangkan margin-right pada tab kedua agar pas */
+    .tab-btn:last-child {
+        margin-right: 0;
+    }
+
+    .history {
+        max-height: 300px;
+        /* agar history juga muat di bawah tabs */
+    }
+
+    .netting {
+        margin-top: 1rem;
+    }
+
+    .top-boxes {
+        flex-direction: column;
+        /* Stack boxes vertically */
+    }
+
+    .form-container {
+        flex-direction: column;
+        /* Stack form elements vertically */
+    }
+
+    .form-row {
+        flex-direction: column;
+        /* Stack select dan input vertically */
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-row select,
+    .form-row input {
+        width: 100%;
+        /* Full width untuk inputs */
+        font-size: 0.875rem;
+        /* Ukuran font lebih kecil untuk inputs */
+    }
+
+    .arrow-center {
+        font-size: 1.5rem;
+        /* Adjust arrow size */
+        margin: 0.5rem 0;
+        /* Adjust margin */
+    }
+
+    .submit-btn {
+        margin-top: 1rem;
+        /* Space above submit button */
+        width: 100%;
+        /* Full width for submit */
+        font-size: 0.875rem;
+        /* Smaller font size for submit */
+    }
+
+    /* Jika ingin style lain di bawah 380px, tambahkan di sini */
+}
+
+@media (max-width: 300px) {
+    body {
+        font-size: 10px;
+    }
+
+    svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    header h1 {
+        font-size: 0.8rem;
+    }
+
+    button {
+        padding: 0.15rem;
     }
 
     .hutang,
     .history {
-        max-height: 300px;
+        max-height: 250px;
     }
 
     .netting-row span {
@@ -665,7 +795,7 @@ main {
     }
 
     .netting-row {
-        gap: 0.25rem;
+        gap: 0.15rem;
     }
 
     form {
@@ -679,5 +809,13 @@ main {
 
     .top-boxes {
         flex-direction: column;
+    }
+
+    .header-buttons {
+        flex-direction: column;
+    }
+
+    .header-buttons button {
+        margin-bottom: 0.5rem;
     }
 }

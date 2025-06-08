@@ -216,13 +216,19 @@ $rekening = [
     .dark-mode #dataHutangBox h2 {
       color: #bfa742;
     }
-    /* Icon sorting di samping judul */
-    #dataHutangBox h2 svg {
-      margin-left: 8px;
+
+    #sortIcon {
       cursor: pointer;
-      transition: transform 0.3s ease;
-      color: inherit;
-    }
+      width: 1.5rem; /* Adjust size if needed */
+      height: 1.5rem;
+  stroke-width: 2;
+  stroke: currentColor;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+#sortIcon:hover {
+  color: #3b82f6; /* Change color on hover */
+  transform: scale(1.1); /* Slightly enlarge on hover */
+}
 
     /* Judul "Netting Total" */
     .judul-netting {
@@ -356,8 +362,8 @@ $rekening = [
     <h1>Hutang Publik</h1>
     <button id="toggleMode" aria-label="Toggle Dark/Light Mode" title="Toggle Mode" type="button">
       <svg id="modeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
-           aria-hidden="true" focusable="false" class="w-6 h-6">
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
+            aria-hidden="true" focusable="false" class="w-6 h-6">
         <circle cx="12" cy="12" r="5"></circle>
         <line x1="12" y1="1" x2="12" y2="3"></line>
         <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -374,22 +380,14 @@ $rekening = [
   <main>
     <!-- BOX DATA HUTANG (di atas) -->
     <section id="dataHutangBox" class="box">
-      <h2 class="text-center">
+      <h2 class="flex justify-between items-center">
         <span class="judul-netting">Netting Total</span>
         <svg id="sortIcon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
-             aria-hidden="true" focusable="false" class="w-5 h-5">
-          <polyline points="6 9 12 15 18 9"></polyline>
-          <polyline points="6 15 12 9 18 15"></polyline>
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
+          aria-hidden="true" focusable="false" class="w-6 h-6 cursor-pointer">
+          <path d="M8 9l4-4 4 4M8 15l4 4 4-4" />
         </svg>
       </h2>
-
-      <!-- Header Sorting Baris -->
-      <div class="header-row">
-        <div class="header-sort" data-field="from">Penghutang</div>
-        <div class="header-sort" data-field="to">Yang Dihutang</div>
-        <div class="header-sort text-right" data-field="jumlah">Nominal</div>
-      </div>
 
       <!-- Daftar Hutang penuh tanpa scroll -->
       <div id="dataHutangList"></div>
@@ -399,19 +397,19 @@ $rekening = [
 
       <!-- Hutang Terbanyak di Paling Bawah -->
       <?php if ($namaMaxCreditor !== null): ?>
-        <div class="winning-text mt-6">
+      <div class="winning-text mt-6">
           Hutang terbanyak dipegang oleh
-          <span><?= htmlspecialchars($namaMaxCreditor) ?></span>
+        <span><?= htmlspecialchars($namaMaxCreditor) ?></span>
           dengan Jumlah
-          <span>Rp <?= number_format($maxCreditorAmount, 0, ',', '.') ?></span>
-        </div>
-        <img src="<?php
-          $pathFoto = "assets/foto/" . strtolower($namaMaxCreditor) . ".png";
-          if (!file_exists($pathFoto)) {
-            $pathFoto = "assets/foto/agus.png";
-          }
-          echo $pathFoto;
-        ?>" alt="<?= htmlspecialchars($namaMaxCreditor) ?>" class="winner-photo"/>
+        <span>Rp <?= number_format($maxCreditorAmount, 0, ',', '.') ?></span>
+      </div>
+      <img src="<?php
+        $pathFoto = "assets/foto/" . strtolower($namaMaxCreditor) . ".jpg";
+        if (!file_exists($pathFoto)) {
+          $pathFoto = "assets/foto/agus.png";
+        }
+        echo $pathFoto;
+      ?>" alt="<?= htmlspecialchars($namaMaxCreditor) ?>" class="winner-photo"/>
       <?php endif; ?>
     </section>
 
@@ -424,9 +422,9 @@ $rekening = [
             <div class="rekening-header" data-nama="<?= htmlspecialchars($nama) ?>">
               <span><?= htmlspecialchars($nama) ?></span>
               <svg class="w-5 h-5 transform transition-transform" data-icon="<?= htmlspecialchars($nama) ?>"
-                   xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
-                   aria-hidden="true" focusable="false">
+                    xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
+                    aria-hidden="true" focusable="false">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </div>
@@ -480,66 +478,59 @@ $rekening = [
     // Tombol sorting di judul
     const sortIcon = document.getElementById('sortIcon');
     sortIcon.addEventListener('click', () => {
-      sortField = (sortField === 'from') ? 'to' : 'from';
+      sortField = (sortField === 'from') ? 'to' : 'from'; // Toggle sort field
       sortNetting(sortField);
-      // Rotasi icon untuk indikasi
-      if (sortIcon.style.transform === 'rotate(180deg)') {
-        sortIcon.style.transform = 'rotate(0deg)';
-      } else {
-        sortIcon.style.transform = 'rotate(180deg)';
-      }
     });
 
-    function renderDataHutang(data) {
+    // Render Data Hutang
+    function renderDataHutang(data, groupByField) {
       const container = document.getElementById('dataHutangList');
       container.innerHTML = '';
-      let currentDebtor = null;
+      let currentGroupKey = null;
+
       data.forEach(row => {
+        const groupKey = row[groupByField]; // either 'from' or 'to'
         const debtor = row.from;
         const creditor = row.to;
         const amount = row.jumlah;
-        if (currentDebtor !== null && debtor !== currentDebtor) {
+
+        // Insert separator if the grouping key changes (and not first item)
+        if (currentGroupKey !== null && currentGroupKey !== groupKey) {
           const sep = document.createElement('div');
           sep.className = 'hutang-separator';
           container.appendChild(sep);
         }
-        currentDebtor = debtor;
+        currentGroupKey = groupKey;
+
         const divRow = document.createElement('div');
         divRow.className = 'hutang-row';
+    
+        // Update the text content to include "hutang"
         const debtText = document.createElement('div');
         debtText.className = 'text-debtor';
-        debtText.textContent = debtor;
-        const credText = document.createElement('div');
-        credText.className = 'text-creditor';
-        credText.textContent = creditor;
+        debtText.textContent = `${debtor} hutang ${creditor}`; // Updated line
+
         const amountText = document.createElement('div');
         amountText.className = 'text-amount';
         amountText.textContent = 'Rp ' + amount.toLocaleString('id-ID');
+    
         divRow.appendChild(debtText);
-        divRow.appendChild(credText);
-        divRow.appendChild(amountText);
+        divRow.appendChild(amountText); // Removed creditor text
         container.appendChild(divRow);
       });
+
       const totalElem = document.getElementById('totalHutang');
       totalElem.textContent = 'Total Hutang: Rp ' + data.reduce((sum, r) => sum + r.jumlah, 0).toLocaleString('id-ID');
     }
 
+    // Sorting Netting
     function sortNetting(field) {
-      if (sortDirection === 'asc') {
-        sortDirection = 'desc';
-      } else {
-        sortDirection = 'asc';
-      }
       const sorted = [...nettingData].sort((a, b) => {
-        let valA = a[field];
-        let valB = b[field];
-        valA = valA.toLowerCase();
-        valB = valB.toLowerCase();
-        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-        return 0;
+        let valA = a[field].toLowerCase();
+        let valB = b[field].toLowerCase();
+        return valA.localeCompare(valB); // Always sort in ascending order
       });
-      renderDataHutang(sorted);
+      renderDataHutang(sorted, field); // Pass the field to renderDataHutang
     }
 
     // Render awal default by 'from'
@@ -569,7 +560,7 @@ $rekening = [
       });
     });
 
-    // ----------- Copy ke Clipboard --------------
+    // ----------- Copy ke Clipboard -------------- 
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const nama = btn.getAttribute('data-copy');

@@ -127,7 +127,7 @@ $nama_list = ['Agus', 'Aseng', 'Cinok', 'Erik', 'Jerry', 'Leo', 'Maik', 'Mawang'
         function formatRupiah(number) {
             return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
-
+//test
         // Fetch netting data
         const nettingData = [];
         <?php

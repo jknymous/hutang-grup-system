@@ -221,14 +221,15 @@ $rekening = [
       cursor: pointer;
       width: 1.5rem; /* Adjust size if needed */
       height: 1.5rem;
-  stroke-width: 2;
-  stroke: currentColor;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-#sortIcon:hover {
-  color: #3b82f6; /* Change color on hover */
-  transform: scale(1.1); /* Slightly enlarge on hover */
-}
+      stroke-width: 2;
+      stroke: currentColor;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    
+    #sortIcon:hover {
+      color: #3b82f6; /* Change color on hover */
+      transform: scale(1.1); /* Slightly enlarge on hover */
+    }
 
     /* Judul "Netting Total" */
     .judul-netting {
@@ -281,6 +282,28 @@ $rekening = [
     }
     .dark-mode #totalHutang {
       color: #bfa742;
+    }
+
+    /* ===== Container WINNER ===== */
+    .winning-text {
+      background-color: #f3f4f6;
+    }
+
+    .dark-mode .winning-text {
+      background-color: #334155;
+    }
+
+    .highlight-text {
+      color: #1e40af;
+    }
+
+    .dark-mode .highlight-text {
+      color: #bfa742;
+    }
+
+    .winning-text:hover {
+      transform: scale(1.01);
+      transition: all 0.3s ease;
     }
 
     /* ===== Box No Rek (Rekening/E-Wallet) ===== */
@@ -393,23 +416,25 @@ $rekening = [
       <div id="dataHutangList"></div>
 
       <!-- Total Hutang -->
-      <div id="totalHutang">Total Hutang: Rp <?= number_format($totalKeseluruhan, 0, ',', '.') ?></div>
+      <div id="totalHutang">Total Hutang Rp <?= number_format($totalKeseluruhan, 0, ',', '.') ?></div>
 
       <!-- Hutang Terbanyak di Paling Bawah -->
       <?php if ($namaMaxCreditor !== null): ?>
-      <div class="winning-text mt-6">
-          Hutang terbanyak dipegang oleh
-        <span><?= htmlspecialchars($namaMaxCreditor) ?></span>
-          dengan Jumlah
-        <span>Rp <?= number_format($maxCreditorAmount, 0, ',', '.') ?></span>
-      </div>
-      <img src="<?php
-        $pathFoto = "assets/foto/" . strtolower($namaMaxCreditor) . ".jpg";
-        if (!file_exists($pathFoto)) {
-          $pathFoto = "assets/foto/agus.png";
-        }
-        echo $pathFoto;
-      ?>" alt="<?= htmlspecialchars($namaMaxCreditor) ?>" class="winner-photo"/>
+        <div class="winning-text mt-6 p-4 rounded text-center">
+          <p class="text-xl font-bold"> <!-- Increased font size to text-xl and made it bold -->
+            Hutang terbanyak dipegang oleh 
+            <span class="highlight-text"><?= htmlspecialchars($namaMaxCreditor) ?></span>
+            dengan Jumlah 
+            <span class="highlight-text">Rp <?= number_format($maxCreditorAmount, 0, ',', '.') ?></span>
+          </p>
+          <img src="<?php
+            $pathFoto = "assets/foto/" . strtolower($namaMaxCreditor) . ".jpg";
+            if (!file_exists($pathFoto)) {
+              $pathFoto = "assets/foto/agus.png";
+            }
+            echo $pathFoto;
+          ?>" alt="<?= htmlspecialchars($namaMaxCreditor) ?>" class="winner-photo w-44 h-44 mx-auto mt-2 rounded-lg"/> <!-- Added rounded-lg for slight border radius -->
+        </div>
       <?php endif; ?>
     </section>
 
@@ -520,7 +545,7 @@ $rekening = [
       });
 
       const totalElem = document.getElementById('totalHutang');
-      totalElem.textContent = 'Total Hutang: Rp ' + data.reduce((sum, r) => sum + r.jumlah, 0).toLocaleString('id-ID');
+      totalElem.textContent = 'Total Hutang Rp ' + data.reduce((sum, r) => sum + r.jumlah, 0).toLocaleString('id-ID');
     }
 
     // Sorting Netting

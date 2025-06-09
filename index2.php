@@ -78,17 +78,23 @@ $jsonNetting = json_encode($hasil_netting, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HE
 
 // Data rekening/Ewallet
 $rekening = [
-    'Agus'   => '081234567890',
-    'Aseng'  => '081200011122',
-    'Cinok'  => '081299988877',
-    'Erik'   => '081266677755',
-    'Jerry'  => '081255544433',
-    'Leo'    => '081222233334',
-    'Maik'   => '081277766655',
-    'Mawang' => '081233344455',
-    'Redd'   => '081211122233',
-    'Rizz'   => '081288899900',
-    'Viktor' => '081255566677'
+  'Agus'   => [
+      ['bank' => 'Bank BCA', 'noRek' => '8890785957'],
+      ['bank' => 'GOPAY', 'noRek' => '082172040214']
+  ],
+  'Erik'   => [
+      ['bank' => 'Bank BCA', 'noRek' => '8520308475']
+  ],
+  'Jerry'  => [
+      ['bank' => 'OVO GOPAY', 'noRek' => '081277447620']
+  ],
+  'Maik'   => [
+      ['bank' => 'Bank BCA', 'noRek' => '5271880716']
+  ],
+  'Rizz'   => [
+      ['bank' => 'Bank BCA', 'noRek' => '8210860321'],
+      ['bank' => 'OVO GOPAY DANA', 'noRek' => '081277645283']
+  ]
 ];
 ?>
 <!DOCTYPE html>
@@ -96,7 +102,7 @@ $rekening = [
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Hutang Publik</title>
+  <title>Buku Nikah Rizz</title>
 
   <!-- Tailwind CSS CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
@@ -123,7 +129,6 @@ $rekening = [
       background-color: white;
       color: #000000;
     }
-
     .dark-mode {
       background-color: #0b1423;
       color: #ffffff;
@@ -216,7 +221,6 @@ $rekening = [
     .dark-mode #dataHutangBox h2 {
       color: #bfa742;
     }
-
     #sortIcon {
       cursor: pointer;
       width: 1.5rem; /* Adjust size if needed */
@@ -225,7 +229,6 @@ $rekening = [
       stroke: currentColor;
       transition: transform 0.3s ease, color 0.3s ease;
     }
-    
     #sortIcon:hover {
       color: #3b82f6; /* Change color on hover */
       transform: scale(1.1); /* Slightly enlarge on hover */
@@ -272,6 +275,7 @@ $rekening = [
     .dark-mode .hutang-separator {
       border-color: #475569;
     }
+    
     /* Total hutang bold */
     #totalHutang {
       margin-top: 1rem;
@@ -288,19 +292,15 @@ $rekening = [
     .winning-text {
       background-color: #f3f4f6;
     }
-
     .dark-mode .winning-text {
       background-color: #334155;
     }
-
     .highlight-text {
       color: #1e40af;
     }
-
     .dark-mode .highlight-text {
       color: #bfa742;
     }
-
     .winning-text:hover {
       transform: scale(1.01);
       transition: all 0.3s ease;
@@ -350,7 +350,7 @@ $rekening = [
       color: #f3f4f6;
     }
     .rekening-content.open {
-      max-height: 100px;
+      max-height: 200px;
     }
     .rekening-num {
       font-family: monospace;
@@ -376,13 +376,74 @@ $rekening = [
       background-color: #bfa742;
       color: #0b1423;
     }
+
+    /* ===== Data rek ===== */
+    .rekening-num {
+      background-color: #e2e8f0;
+      padding: 0.5rem; 
+      border-radius: 0.375rem; 
+      display: inline-block; 
+      margin-right: 1rem; 
+      flex: 1; 
+    }
+    .dark-mode .rekening-num {
+      background-color: #475569; 
+      color: #f3f4f6; 
+    }
+    .copy-btn {
+      background-color: #1e40af;
+      color: #ffffff; 
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 0.375rem; 
+      cursor: pointer; 
+      transition: opacity 0.3s; 
+    }
+    .copy-btn:hover {
+      opacity: 0.9; 
+    }
+    .rekening-item {
+      margin-bottom: 1rem;
+    }
+
+    @media  (max-width: 350px) {
+      .judul-netting {
+        font-size: 1.2rem;
+      }
+      #sortIcon {
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+      .hutang-row {
+        font-size: 0.8rem;
+      }
+      #totalHutang {
+        font-size: 1rem;
+      }
+      .winning-text p {
+        font-size: 0.8rem;
+        font-weight: 400; 
+      }
+      #rekeningBox h2 {
+        font-size: 1.2rem;
+      }
+      .rekening-header {
+        font-size: 0.9rem;
+      }
+      .rekening-content.open {
+        font-size: 0.8rem;
+      }
+      .rekening-num {
+        font-size: 0.8rem;
+      }
+    }
   </style>
 </head>
 <body class="light-mode">
   <!-- HEADER -->
   <header>
     <img src="assets/foto/agus.png" alt="Logo" class="w-10 h-10 object-cover"/>
-    <h1>Hutang Publik</h1>
+    <h1>Buku Nikah Rizz</h1>
     <button id="toggleMode" aria-label="Toggle Dark/Light Mode" title="Toggle Mode" type="button">
       <svg id="modeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
@@ -442,25 +503,31 @@ $rekening = [
     <section id="rekeningBox" class="box">
       <h2 class="text-2xl font-semibold mb-4 text-center">Nomor Rekening / E-Wallet</h2>
       <div id="rekeningContainer">
-        <?php foreach ($rekening as $nama => $noRek): ?>
-          <div class="rekening-item">
-            <div class="rekening-header" data-nama="<?= htmlspecialchars($nama) ?>">
-              <span><?= htmlspecialchars($nama) ?></span>
-              <svg class="w-5 h-5 transform transition-transform" data-icon="<?= htmlspecialchars($nama) ?>"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
-                    aria-hidden="true" focusable="false">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </div>
-            <div class="rekening-content" data-content="<?= htmlspecialchars($nama) ?>">
-              <div class="p-4 flex items-center justify-between">
-                <span class="rekening-num"><?= htmlspecialchars($noRek) ?></span>
-                <button class="copy-btn" data-copy="<?= htmlspecialchars($nama) ?>">Copy</button>
-              </div>
-            </div>
+      <?php foreach ($rekening as $nama => $dataList): ?>
+  <div class="rekening-item">
+    <div class="rekening-header" data-nama="<?= htmlspecialchars($nama) ?>">
+      <span><?= htmlspecialchars($nama) ?></span>
+      <svg class="w-5 h-5 transform transition-transform" data-icon="<?= htmlspecialchars($nama) ?>"
+            xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
+            aria-hidden="true" focusable="false">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </div>
+    <div class="rekening-content" data-content="<?= htmlspecialchars($nama) ?>">
+      <div class="p-4 flex flex-col">
+        <?php foreach ($dataList as $data): ?>
+          <div class="flex items-center justify-between mb-2"> <!-- Tambahkan margin bawah -->
+            <span class="text-gray-600 mr-2"><?= htmlspecialchars($data['bank']) ?></span> <!-- Keterangan bank di sebelah kiri -->
+            <span class="rekening-num"><?= htmlspecialchars($data['noRek']) ?></span> <!-- Hanya nomor rekening -->
+            <button class="copy-btn" data-copy="<?= htmlspecialchars($data['noRek']) ?>">Copy</button>
           </div>
         <?php endforeach; ?>
+      </div>
+    </div>
+  </div>
+<?php endforeach; ?>
+
       </div>
     </section>
   </main>
@@ -588,9 +655,7 @@ $rekening = [
     // ----------- Copy ke Clipboard -------------- 
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const nama = btn.getAttribute('data-copy');
-        const noRekElem = document.querySelector(`.rekening-content[data-content="${nama}"] .rekening-num`);
-        const nomor = noRekElem.textContent.trim();
+        const nomor = btn.getAttribute('data-copy');
         navigator.clipboard.writeText(nomor).then(() => {
           btn.textContent = 'Copied';
           setTimeout(() => {
